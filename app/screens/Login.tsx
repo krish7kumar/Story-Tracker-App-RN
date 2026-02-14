@@ -6,7 +6,6 @@ import { validateEmail } from "@/utility/validations";
 import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { NAVIGATION } from "../constants/Navigation";
-import useUserManage from "../hooks/services/useUserManage";
 
 const ERR_MSG = {
   email: "Invalid email, Please enter valid Email.",
@@ -14,7 +13,6 @@ const ERR_MSG = {
 };
 
 export default function LoginScreen(props: any) {
-  const { loginUser } = useUserManage();
   const [email, setEmail] = useState("");
   //change the state structure
   const [password, setPassword] = useState("");
@@ -24,6 +22,10 @@ export default function LoginScreen(props: any) {
   function resetInput() {
     setEmail("");
     setPassword("");
+  }
+
+  function onPressLogin() {
+    return;
   }
 
   return (
@@ -64,7 +66,7 @@ export default function LoginScreen(props: any) {
         <CustomButton
           label="Log In"
           disabled={email === "" || password?.length < 8}
-          onPress={() => loginUser(email, password)}
+          onPress={onPressLogin}
         />
         <View
           style={{ flexDirection: "row", alignSelf: "center", marginTop: 16 }}

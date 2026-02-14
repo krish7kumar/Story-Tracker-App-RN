@@ -1,11 +1,11 @@
 import { COLORS } from "@/app/Theme/Colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, { Easing, FadeInUp, FadeOutUp } from "react-native-reanimated";
 import { TOAST_TYPE } from "../constants/Toast";
-import { AppContext } from "../store/AppContext";
 import { SubTitle } from "./CustomeText";
+import { useToastStore } from "../store/toastStore";
 
 const ToastColor = {
   [TOAST_TYPE.SUCCESS]: COLORS.success,
@@ -20,17 +20,17 @@ const ToastImage = {
 };
 
 export default function ToastMessage() {
-  const { toastConfigHook } = useContext(AppContext);
+  const { toastMsg, resetToast } = useToastStore((state) => state);
   const styles = getStyles();
 
   useEffect(() => {
-    if (toastConfigHook.toastMsg.isVisible) {
+    if (toastMsg.isVisible) {
       const timer = setTimeout(() => {
-        toastConfigHook.resetToast();
+        resetToast();
       }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [toastConfigHook.toastMsg.isVisible]);
+  }, [toastMsg.isVisible]);
 
   return (
     <Animated.View
@@ -39,20 +39,17 @@ export default function ToastMessage() {
       style={styles.rootContainer}
     >
       <View
-        style={[
-          { borderColor: ToastColor[toastConfigHook?.toastMsg?.type] },
-          styles.container,
-        ]}
+        style={[{ borderColor: ToastColor[toastMsg?.type] }, styles.container]}
       >
         <MaterialCommunityIcons
-          color={ToastColor[toastConfigHook?.toastMsg?.type]}
+          color={ToastColor[toastMsg?.type]}
           // @ts-ignore
-          name={ToastImage[toastConfigHook?.toastMsg?.type]}
+          name={ToastImage[toastMsg?.type]}
           size={24}
           style={{ width: "12%" }}
         />
         <SubTitle style={{ color: COLORS.accent, width: "88%" }}>
-          {toastConfigHook.toastMsg.message}
+          {toastMsg.message}
         </SubTitle>
       </View>
     </Animated.View>

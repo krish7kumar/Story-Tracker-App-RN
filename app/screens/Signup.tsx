@@ -4,15 +4,13 @@ import Divider from "@/app/components/Divider";
 import TextInputBox from "@/app/components/TextInputBox";
 import { COLORS } from "@/app/Theme/Colors";
 import { validateEmail, validatePassword } from "@/utility/validations";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { TOAST_TYPE } from "../constants/Toast";
-import useUserManage from "../hooks/services/useUserManage";
-import { AppContext } from "../store/AppContext";
+import { useToastStore } from "../store/toastStore";
 
 export default function Signup(props: any) {
-  const { toastConfigHook } = useContext(AppContext);
-  const { createNewUser } = useUserManage();
+  const raiseToast = useToastStore((state) => state.raiseToast);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fName, setFname] = useState("");
@@ -26,28 +24,22 @@ export default function Signup(props: any) {
   };
 
   const newUserValidation = () => {
-    if (!validateEmail(email)) {
-      toastConfigHook.raiseToast(
-        "Invalid email, please enter valid email.",
-        TOAST_TYPE.ERROR
-      );
+    if (!fName || !lName) {
+      raiseToast("Please enter both first and last name.", TOAST_TYPE.ERROR);
+    } else if (!validateEmail(email)) {
+      raiseToast("Invalid email, please enter valid email.", TOAST_TYPE.ERROR);
     } else if (!validatePassword(password).isValidPassword) {
-      toastConfigHook.raiseToast(
+      raiseToast(
         "Invalid password, please enter valid password.",
-        TOAST_TYPE.ERROR
+        TOAST_TYPE.ERROR,
       );
     } else if (password !== confirmPass) {
-      toastConfigHook.raiseToast(
+      raiseToast(
         `Your passwords don't match.\nMake sure both fields contain the exact same password.`,
-        TOAST_TYPE.ERROR
+        TOAST_TYPE.ERROR,
       );
     } else {
-      createNewUser({
-        fName: fName,
-        lName: lName,
-        email: email,
-        password: password,
-      });
+      return;
     }
   };
 

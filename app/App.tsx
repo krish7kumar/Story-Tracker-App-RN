@@ -16,9 +16,10 @@ import Main from "./screens/Main";
 import Signup from "./screens/Signup";
 import { AppContext } from "./store/AppContext";
 import { COLORS } from "./Theme/Colors";
+import { useToastStore } from "./store/toastStore";
 
 export default function App() {
-  const { toastConfigHook } = useContext(AppContext);
+  const toastMsg = useToastStore((state) => state.toastMsg);
   const Stack = createNativeStackNavigator();
 
   return (
@@ -30,7 +31,7 @@ export default function App() {
           }}
           behavior="padding"
         >
-          {toastConfigHook?.toastMsg?.isVisible && <ToastMessage />}
+          {toastMsg?.isVisible && <ToastMessage />}
           <NavigationIndependentTree>
             <NavigationContainer>
               <Stack.Navigator

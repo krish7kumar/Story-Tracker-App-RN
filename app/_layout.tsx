@@ -20,9 +20,7 @@ export default function RootLayout() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
-      <AppContextProvider>
-        <App />
-      </AppContextProvider>
+      <App />
     </SafeAreaView>
   );
 }
